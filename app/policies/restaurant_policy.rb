@@ -2,7 +2,9 @@ class RestaurantPolicy < ApplicationPolicy
   class Scope < Scope
     # NOTE: Be explicit about which records you allow access to!
     def resolve
-      scope.all
+      # scope.all
+      # scope.where(user: user)
+      user.admin? ? scope.all : scope.where(user: user)
     end
   end
 
@@ -15,10 +17,10 @@ class RestaurantPolicy < ApplicationPolicy
   end
 
   def update?
-    record.user == user
+    user.admin? || record.user == user
   end
 
   def destroy?
-    record.user == user
+    user.admin? || record.user == user
   end
 end
