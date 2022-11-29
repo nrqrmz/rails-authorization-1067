@@ -3,7 +3,7 @@ class RestaurantsController < ApplicationController
 
   # GET /restaurants
   def index
-    @restaurants = Restaurant.all
+    @restaurants = policy_scope(Restaurant)
   end
 
   # GET /restaurants/1
@@ -19,12 +19,14 @@ class RestaurantsController < ApplicationController
 
   # GET /restaurants/1/edit
   def edit
+    authorize @restaurant
   end
 
   # POST /restaurants
   def create
     @restaurant = Restaurant.new(restaurant_params)
     @restaurant.user = current_user
+    authorize @restaurant
 
     if @restaurant.save
       redirect_to @restaurant, notice: "Restaurant was successfully created."
@@ -35,6 +37,7 @@ class RestaurantsController < ApplicationController
 
   # PATCH/PUT /restaurants/1
   def update
+    authorize @restaurant
     if @restaurant.update(restaurant_params)
       redirect_to @restaurant, notice: "Restaurant was successfully updated."
     else
@@ -44,6 +47,7 @@ class RestaurantsController < ApplicationController
 
   # DELETE /restaurants/1
   def destroy
+    authorize @restaurant
     @restaurant.destroy
     redirect_to restaurants_url, notice: "Restaurant was successfully destroyed."
   end
